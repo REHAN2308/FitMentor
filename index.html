@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitMentor AI - Your Personal Fitness Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary: #EC4899;
+            --accent: #14B8A6;
+            --gold: #F59E0B;
+            --bg-dark: #0A0E27;
+            --bg-darker: #050814;
+            --bg-card: rgba(30, 41, 59, 0.6);
+            --text: #FFFFFF;
+            --text-secondary: #E2E8F0;
+            --text-muted: #94A3B8;
+            --border: rgba(148, 163, 184, 0.15);
+            --success: #10B981;
+            --warning: #F59E0B;
+            --glow: rgba(99, 102, 241, 0.5);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Premium Animated Background with Particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at top, #1a1f3a 0%, var(--bg-darker) 50%, #000000 100%);
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -300px;
+            left: -200px;
+            animation: float 25s ease-in-out infinite;
+            filter: blur(60px);
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -250px;
+            right: -150px;
+            animation: float 20s ease-in-out infinite reverse;
+            filter: blur(60px);
+        }
+
+        /* Animated Stars/Particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% { 
+                transform: translate(100px, 100px) rotate(90deg);
+            }
+            50% { 
+                transform: translate(200px, 50px) rotate(180deg);
+            }
+            75% { 
+                transform: translate(100px, -50px) rotate(270deg);
+            }
+        }
+
+        /* Animated Grid Lines */
+        .grid-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -250px;
+            left: -250px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -200px;
+            right: -200px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, 100px) scale(1.1); }
+            50% { transform: translate(200px, 50px) scale(0.9); }
+            75% { transform: translate(100px, -50px) scale(1.05); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        /* Premium Header with Glow */
+        header {
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 14, 39, 0.85);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 30px rgba(99, 102, 241, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px var(--glow));
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .premium-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, var(--gold) 0%, #FCD34D 100%);
+            color: var(--bg-darker);
+            border-radius: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shine {
+            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
+        }
+
+        /* Premium Hero Section with Floating Icons */
+        .hero {
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.1;
+            animation: floatIcon 6s ease-in-out infinite;
+            filter: blur(1px);
+        }
+
+        .floating-icon:nth-child(2) {
+            animation-delay: 1.5s;
+            color: var(--secondary);
+        }
+
+        .floating-icon:nth-child(3) {
+            animation-delay: 3s;
+            color: var(--accent);
+        }
+
+        .floating-icon:nth-child(4) {
+            animation-delay: 4.5s;
+            color: var(--gold);
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.1;
+            }
+            50% { 
+                transform: translateY(-30px) rotate(180deg);
+                opacity: 0.2;
+            }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease-out;
+            filter: drop-shadow(0 0 30px var(--glow));
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Premium Form Section with Glass Morphism */
+        .form-section {
+            max-width: 950px;
+            margin: 0 auto 4rem;
+            padding: 3rem;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15),
+                        0 0 20px rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .input-unit {
+            position: relative;
+        }
+
+        .unit-label {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Premium Gradient Button with Glow */
+        .btn-primary {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4),
+                        0 0 40px rgba(236, 72, 153, 0.2);
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.6),
+                        0 0 60px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        /* Premium Loading Section */
+        .loading-section {
+            display: none;
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 3rem;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+            text-align: center;
+        }
+
+        .loading-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-subtext {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .loading-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 1rem;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .loading-step.active {
+            opacity: 1;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .loading-step.complete {
+            opacity: 1;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+        }
+
+        .loading-step i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .loading-step.complete i {
+            color: var(--success);
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            max-width: 1400px;
+            margin: 4rem auto;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .results-header h2 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px var(--glow));
+        }
+
+        /* Premium Stats Grid with Glow */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.3),
+                        0 0 40px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 15px var(--glow));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Premium Tabs with Glow */
+        .tabs-container {
+            margin-bottom: 3rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: 1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .tab:hover::before {
+            left: 100%;
+        }
+
+        .tab:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4),
+                        0 0 40px rgba(236, 72, 153, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Premium Workout Cards with Glow */
+        .workout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.75rem;
+        }
+
+        .workout-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .workout-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .workout-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.3),
+                        0 0 40px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .workout-day {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .workout-day:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%);
+        }
+
+        .workout-day h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .day-badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .expand-icon {
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .workout-exercises {
+            display: none;
+            padding: 1.5rem;
+            gap: 1rem;
+        }
+
+        .workout-exercises.expanded {
+            display: flex;
+            flex-direction: column;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exercise {
+            padding: 1.25rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 1rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .exercise:hover {
+            background: rgba(15, 23, 42, 0.8);
+            border-left-color: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .exercise-name {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .exercise-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .exercise-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        /* Premium Meal Cards with Glow */
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.75rem;
+        }
+
+        .meal-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .meal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent), var(--gold));
+        }
+
+        .meal-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(236, 72, 153, 0.3),
+                        0 0 40px rgba(236, 72, 153, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .meal-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(20, 184, 166, 0.15) 100%);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .meal-header:hover {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.25) 0%, rgba(20, 184, 166, 0.25) 100%);
+        }
+
+        .meal-time {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .meal-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .meal-body {
+            display: none;
+            padding: 1.5rem;
+        }
+
+        .meal-body.expanded {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .meal-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .meal-macros {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .macro {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 0.75rem;
+        }
+
+        .macro-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .macro-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .form-section {
+                padding: 2rem;
+            }
+
+            .workout-grid, .meal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="grid-lines"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>FitMentor AI</span>
+                    <span class="premium-badge"><i class="fas fa-crown"></i> Premium</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section with Floating Elements -->
+        <section class="hero" id="hero-section">
+            <div class="hero-floating-icons">
+                <i class="fas fa-dumbbell floating-icon" style="top: 10%; left: 10%;"></i>
+                <i class="fas fa-heart floating-icon" style="top: 20%; right: 15%;"></i>
+                <i class="fas fa-fire floating-icon" style="bottom: 20%; left: 15%;"></i>
+                <i class="fas fa-trophy floating-icon" style="bottom: 15%; right: 10%;"></i>
+            </div>
+            <h1>Transform Your Fitness Journey</h1>
+            <p>Experience the future of personalized training with AI-powered workout and nutrition plans tailored specifically for you</p>
+        </section>
+
+        <!-- Form Section -->
+        <section class="form-section" id="form-section">
+            <h2 class="section-title">Let's Get Started</h2>
+            <p class="section-subtitle">Share your details to receive your personalized fitness blueprint</p>
+
+            <form id="fitness-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <div class="input-unit">
+                            <input type="number" id="weight" class="form-control" placeholder="70" required min="30" max="300">
+                            <span class="unit-label">kg</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="height">Height</label>
+                        <div class="input-unit">
+                            <input type="number" id="height" class="form-control" placeholder="175" required min="120" max="250">
+                            <span class="unit-label">cm</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <div class="input-unit">
+                            <input type="number" id="age" class="form-control" placeholder="25" required min="15" max="100">
+                            <span class="unit-label">years</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" class="form-control" required>
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activity_level">Activity Level</label>
+                        <select id="activity_level" class="form-control" required>
+                            <option value="">Select activity level</option>
+                            <option value="sedentary">Sedentary (little to no exercise)</option>
+                            <option value="light">Light (1-3 days/week)</option>
+                            <option value="moderate">Moderate (3-5 days/week)</option>
+                            <option value="active">Active (6-7 days/week)</option>
+                            <option value="very_active">Very Active (athlete level)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fitness_goal">Fitness Goal</label>
+                        <select id="fitness_goal" class="form-control" required>
+                            <option value="">Select your goal</option>
+                            <option value="weight loss">Weight Loss</option>
+                            <option value="muscle gain">Muscle Gain</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="endurance">Endurance</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dietary_preferences">Dietary Preferences</label>
+                        <select id="dietary_preferences" class="form-control" required>
+                            <option value="">Select diet type</option>
+                            <option value="balanced">Balanced Diet</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="keto">Keto</option>
+                            <option value="paleo">Paleo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="health_restrictions">Health Restrictions</label>
+                        <input type="text" id="health_restrictions" class="form-control" placeholder="e.g., knee injury, none">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Generate My Personalized Plan
+                </button>
+            </form>
+        </section>
+
+        <!-- Loading Section -->
+        <section class="loading-section" id="loading-section">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Crafting Your Perfect Plan</div>
+            <div class="loading-subtext">Our AI is analyzing your profile and building something amazing</div>
+            <div class="loading-steps">
+                <div class="loading-step" id="step-1">
+                    <i class="fas fa-calculator"></i>
+                    <span>Analyzing Metrics</span>
+                </div>
+                <div class="loading-step" id="step-2">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Designing Workouts</span>
+                </div>
+                <div class="loading-step" id="step-3">
+                    <i class="fas fa-utensils"></i>
+                    <span>Planning Nutrition</span>
+                </div>
+                <div class="loading-step" id="step-4">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Finalizing Details</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="results-section">
+            <div class="results-header">
+                <h2>Your Personalized Fitness Blueprint</h2>
+                <p style="color: var(--text-secondary);">Everything you need to achieve your goals</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" id="stats-grid"></div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="workouts">
+                        <i class="fas fa-dumbbell"></i>
+                        Workouts
+                    </button>
+                    <button class="tab" data-tab="meals">
+                        <i class="fas fa-utensils"></i>
+                        Nutrition
+                    </button>
+                    <button class="tab" data-tab="notifications">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </button>
+                    <button class="tab" data-tab="challenge">
+                        <i class="fas fa-trophy"></i>
+                        Challenge
+                    </button>
+                    <button class="tab" data-tab="tips">
+                        <i class="fas fa-lightbulb"></i>
+                        Tips
+                    </button>
+                </div>
+
+                <div class="tab-content active" id="workouts-content"></div>
+                <div class="tab-content" id="meals-content"></div>
+                <div class="tab-content" id="notifications-content"></div>
+                <div class="tab-content" id="challenge-content"></div>
+                <div class="tab-content" id="tips-content"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-secondary" onclick="downloadPlan()">
+                    <i class="fas fa-download"></i>
+                    Download Plan
+                </button>
+                <button class="btn-secondary" onclick="printPlan()">
+                    <i class="fas fa-print"></i>
+                    Print Plan
+                </button>
+                <button class="btn-secondary" onclick="resetForm()">
+                    <i class="fas fa-redo"></i>
+                    Create New Plan
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let currentPlan = null;
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        function showNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, { body: body });
+            }
+        }
+
+        // Form submission
+        document.getElementById('fitness-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if ('Notification' in window && Notification.permission === 'default') {
+                await Notification.requestPermission();
+            }
+            
+            const formData = {
+                weight: parseFloat(document.getElementById('weight').value),
+                height: parseFloat(document.getElementById('height').value),
+                age: parseInt(document.getElementById('age').value),
+                gender: document.getElementById('gender').value,
+                activity_level: document.getElementById('activity_level').value,
+                fitness_goal: document.getElementById('fitness_goal').value,
+                dietary_preferences: document.getElementById('dietary_preferences').value,
+                health_restrictions: document.getElementById('health_restrictions').value || 'none'
+            };
+
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('loading-section').classList.add('active');
+            
+            showNotification('FitMentor AI', 'Creating your personalized fitness plan');
+            animateLoadingSteps();
+
+            try {
+                const response = await fetch('http://localhost:5000/api/generate-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                currentPlan = data;
+                showNotification('FitMentor AI', 'Your personalized plan is ready!');
+                displayResults(data);
+            } catch (error) {
+                showNotification('FitMentor AI', 'Error: ' + error.message);
+                alert('Error generating plan: ' + error.message);
+                resetForm();
+            }
+        });
+
+        function animateLoadingSteps() {
+            const steps = [
+                { id: 'step-1', delay: 300, notification: 'Analyzing your profile' },
+                { id: 'step-2', delay: 1000, notification: 'Generating workouts' },
+                { id: 'step-3', delay: 1700, notification: 'Creating meal plans' },
+                { id: 'step-4', delay: 2400, notification: 'Almost ready' }
+            ];
+
+            steps.forEach(step => {
+                setTimeout(() => {
+                    document.getElementById(step.id).classList.add('active');
+                    showNotification('FitMentor AI', step.notification);
+                }, step.delay);
+
+                setTimeout(() => {
+                    document.getElementById(step.id).classList.remove('active');
+                    document.getElementById(step.id).classList.add('complete');
+                }, step.delay + 700);
+            });
+        }
+
+        function displayResults(plan) {
+            document.getElementById('loading-section').classList.remove('active');
+            document.getElementById('results-section').classList.add('active');
+            
+            displayStats(plan);
+            displayWorkouts(plan.workouts);
+            displayMeals(plan.meals);
+            displayNotifications(plan.notifications);
+            displayChallenge(plan.weekly_challenge);
+            displayTips(plan.fitness_tips);
+        }
+
+        function displayStats(plan) {
+            const statsHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="stat-value">${plan.user_profile.bmi}</div>
+                    <div class="stat-label">BMI</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                    <div class="stat-value">${plan.user_profile.daily_calories}</div>
+                    <div class="stat-label">Daily Calories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-drumstick-bite"></i></div>
+                    <div class="stat-value">${plan.user_profile.macros.protein}g</div>
+                    <div class="stat-label">Protein / Day</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-bread-slice"></i></div>
+                    <div class="stat-value">${plan.user_profile.macros.carbs}g</div>
+                    <div class="stat-label">Carbs / Day</div>
+                </div>
+            `;
+            document.getElementById('stats-grid').innerHTML = statsHTML;
+        }
+
+        function displayWorkouts(workouts) {
+            const html = `
+                <div class="workout-grid">
+                    ${workouts.map((day, index) => `
+                        <div class="workout-card">
+                            <div class="workout-day">
+                                <h3>
+                                    <i class="fas fa-calendar-day"></i>
+                                    ${day.day}
+                                </h3>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span class="day-badge">Day ${index + 1}</span>
+                                    <i class="fas fa-chevron-down expand-icon"></i>
+                                </div>
+                            </div>
+                            <div class="workout-exercises">
+                                ${day.exercises.map(ex => `
+                                    <div class="exercise">
+                                        <div class="exercise-name">
+                                            <i class="fas fa-dumbbell"></i>
+                                            ${ex.exercise_name || ex.name || 'Exercise'}
+                                        </div>
+                                        <div class="exercise-details">
+                                            ${ex.sets ? `<span class="exercise-detail"><i class="fas fa-layer-group"></i>${ex.sets} sets</span>` : ''}
+                                            ${ex.reps ? `<span class="exercise-detail"><i class="fas fa-repeat"></i>${ex.reps} reps</span>` : ''}
+                                            ${ex.duration_minutes ? `<span class="exercise-detail"><i class="fas fa-clock"></i>${ex.duration_minutes} min</span>` : ex.duration ? `<span class="exercise-detail"><i class="fas fa-clock"></i>${ex.duration}</span>` : ''}
+                                            ${ex.intensity_level ? `<span class="exercise-detail"><i class="fas fa-tachometer-alt"></i>${ex.intensity_level}</span>` : ''}
+                                            ${ex.equipment_required ? `<span class="exercise-detail"><i class="fas fa-tools"></i>${ex.equipment_required}</span>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('workouts-content').innerHTML = html;
+            
+            document.querySelectorAll('.workout-day').forEach(dayHeader => {
+                dayHeader.addEventListener('click', function() {
+                    const card = this.parentElement;
+                    const exercises = card.querySelector('.workout-exercises');
+                    const icon = card.querySelector('.expand-icon');
+                    
+                    exercises.classList.toggle('expanded');
+                    icon.classList.toggle('expanded');
+                });
+            });
+        }
+
+        function displayMeals(meals) {
+            const html = `
+                <div class="meal-grid">
+                    ${meals.flatMap(dayMeals => {
+                        const cards = [];
+                        
+                        if (dayMeals.breakfast) {
+                            const meal = dayMeals.breakfast;
+                            cards.push(`
+                                <div class="meal-card">
+                                    <div class="meal-header">
+                                        <div class="meal-time">
+                                            <span>${dayMeals.day} - Breakfast</span>
+                                            <i class="fas fa-chevron-down expand-icon"></i>
+                                        </div>
+                                        <div class="meal-name">${meal.meal || meal.name || 'Breakfast'}</div>
+                                    </div>
+                                    <div class="meal-body">
+                                        <div class="meal-description">${meal.description || 'Nutritious breakfast to start your day'}</div>
+                                        <div class="meal-macros">
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.calories || meal.calories_kcal || 0}</div>
+                                                <div class="macro-label">Cal</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.protein_g || meal.protein || 0}g</div>
+                                                <div class="macro-label">Protein</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.carbs_g || meal.carbs || 0}g</div>
+                                                <div class="macro-label">Carbs</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.fats_g || meal.fats || 0}g</div>
+                                                <div class="macro-label">Fats</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                        
+                        if (dayMeals.lunch) {
+                            const meal = dayMeals.lunch;
+                            cards.push(`
+                                <div class="meal-card">
+                                    <div class="meal-header">
+                                        <div class="meal-time">
+                                            <span>${dayMeals.day} - Lunch</span>
+                                            <i class="fas fa-chevron-down expand-icon"></i>
+                                        </div>
+                                        <div class="meal-name">${meal.meal || meal.name || 'Lunch'}</div>
+                                    </div>
+                                    <div class="meal-body">
+                                        <div class="meal-description">${meal.description || 'Balanced lunch for sustained energy'}</div>
+                                        <div class="meal-macros">
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.calories || meal.calories_kcal || 0}</div>
+                                                <div class="macro-label">Cal</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.protein_g || meal.protein || 0}g</div>
+                                                <div class="macro-label">Protein</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.carbs_g || meal.carbs || 0}g</div>
+                                                <div class="macro-label">Carbs</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.fats_g || meal.fats || 0}g</div>
+                                                <div class="macro-label">Fats</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                        
+                        if (dayMeals.dinner) {
+                            const meal = dayMeals.dinner;
+                            cards.push(`
+                                <div class="meal-card">
+                                    <div class="meal-header">
+                                        <div class="meal-time">
+                                            <span>${dayMeals.day} - Dinner</span>
+                                            <i class="fas fa-chevron-down expand-icon"></i>
+                                        </div>
+                                        <div class="meal-name">${meal.meal || meal.name || 'Dinner'}</div>
+                                    </div>
+                                    <div class="meal-body">
+                                        <div class="meal-description">${meal.description || 'Perfect dinner to fuel recovery'}</div>
+                                        <div class="meal-macros">
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.calories || meal.calories_kcal || 0}</div>
+                                                <div class="macro-label">Cal</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.protein_g || meal.protein || 0}g</div>
+                                                <div class="macro-label">Protein</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.carbs_g || meal.carbs || 0}g</div>
+                                                <div class="macro-label">Carbs</div>
+                                            </div>
+                                            <div class="macro">
+                                                <div class="macro-value">${meal.fats_g || meal.fats || 0}g</div>
+                                                <div class="macro-label">Fats</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                        
+                        return cards;
+                    }).join('')}
+                </div>
+            `;
+            document.getElementById('meals-content').innerHTML = html;
+            
+            document.querySelectorAll('.meal-header').forEach(mealHeader => {
+                mealHeader.addEventListener('click', function() {
+                    const card = this.parentElement;
+                    const body = card.querySelector('.meal-body');
+                    const icon = this.querySelector('.expand-icon');
+                    
+                    body.classList.toggle('expanded');
+                    icon.classList.toggle('expanded');
+                });
+            });
+        }
+
+        function displayNotifications(notifications) {
+            const html = `
+                <div style="display: grid; gap: 1rem;">
+                    ${notifications.map(notif => `
+                        <div style="padding: 1.5rem; background: var(--bg-card); border-radius: 1rem; border: 1px solid var(--border);">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-bell" style="color: var(--primary);"></i>
+                                <strong>${notif.time}</strong>
+                                <span style="padding: 0.25rem 0.75rem; background: rgba(139, 92, 246, 0.2); border-radius: 0.5rem; font-size: 0.875rem;">${notif.type}</span>
+                            </div>
+                            <p style="color: var(--text-secondary);">${notif.message}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('notifications-content').innerHTML = html;
+        }
+
+        function displayChallenge(challenge) {
+            const html = `
+                <div style="padding: 3rem; background: var(--bg-card); border-radius: 1.5rem; border: 1px solid var(--border); text-align: center;">
+                    <i class="fas fa-trophy" style="font-size: 4rem; color: var(--warning); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 2rem; margin-bottom: 1rem;">${challenge.title}</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.125rem;">${challenge.description}</p>
+                    <div style="display: grid; gap: 1rem; max-width: 600px; margin: 0 auto;">
+                        <div style="padding: 1.5rem; background: rgba(139, 92, 246, 0.1); border-radius: 1rem;">
+                            <strong style="color: var(--primary);">Goal:</strong>
+                            <p style="color: var(--text-secondary); margin-top: 0.5rem;">${challenge.goal}</p>
+                        </div>
+                        <div style="padding: 1.5rem; background: rgba(236, 72, 153, 0.1); border-radius: 1rem;">
+                            <strong style="color: var(--secondary);">Reward:</strong>
+                            <p style="color: var(--text-secondary); margin-top: 0.5rem;">${challenge.reward}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('challenge-content').innerHTML = html;
+        }
+
+        function displayTips(tips) {
+            const html = `
+                <div style="display: grid; gap: 1.5rem;">
+                    ${tips.map(tip => `
+                        <div style="padding: 2rem; background: var(--bg-card); border-radius: 1.5rem; border: 1px solid var(--border);">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <i class="fas fa-lightbulb" style="font-size: 1.5rem; color: var(--accent);"></i>
+                                <strong style="font-size: 1.125rem;">${tip.day}</strong>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">${tip.tip}</p>
+                            <p style="color: var(--primary); font-weight: 600;"><i class="fas fa-heart"></i> ${tip.motivation}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('tips-content').innerHTML = html;
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabName = this.dataset.tab;
+                
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(tabName + '-content').classList.add('active');
+            });
+        });
+
+        // Download plan
+        function downloadPlan() {
+            if (!currentPlan) return;
+            const dataStr = JSON.stringify(currentPlan, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'fitmentor-plan.json';
+            link.click();
+        }
+
+        // Print plan
+        function printPlan() {
+            window.print();
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('loading-section').classList.remove('active');
+            document.getElementById('results-section').classList.remove('active');
+            document.getElementById('form-section').style.display = 'block';
+            document.getElementById('fitness-form').reset();
+            currentPlan = null;
+        }
+
+        // Create Premium Animated Particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles on load
+        window.addEventListener('load', createParticles);
+    </script>
+</body>
+</html>
