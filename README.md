@@ -200,7 +200,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📧 Contact
 
-Your Name - [@yourhandle](https://twitter.com/yourhandle)
+Your Name - [@rehan.hussain](https://www.instagram.com/rehan.hussain23?igsh=NzUwZ3N5b2pnYjY1)
 
 Project Link: [https://github.com/yourusername/fitmentor-ai](https://github.com/yourusername/fitmentor-ai)
 
@@ -208,3 +208,4 @@ Project Link: [https://github.com/yourusername/fitmentor-ai](https://github.com/
 
 <p align="center">Made with ❤️ and ☕</p>
 <p align="center">⭐ Star this repo if you find it helpful!</p>
+
