@@ -117,13 +117,15 @@ class FitMentorAI:
         }
         
         try:
-            response = requests.post(self.api_url, headers=headers, json=data, timeout=60)  # Reduced timeout
+            response = requests.post(self.api_url, headers=headers, json=data, timeout=80)  # Extended timeout for mobile
             response.raise_for_status()
             result = response.json()
             content = result['choices'][0]['message']['content']
             
             # Clean the response (remove thinking tags, markdown, etc.)
             return self._clean_ai_response(content)
+        except requests.exceptions.Timeout:
+            raise Exception("API request timed out. Please try again.")
         except requests.exceptions.RequestException as e:
             raise Exception(f"Error calling OpenRouter API: {str(e)}")
     
