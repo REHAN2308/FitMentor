@@ -1243,6 +1243,25 @@
     <script>
         let currentPlan = null;
 
+        // Get API base URL - works for both local and network access
+        const getApiUrl = () => {
+            // Use the current host (works for localhost and IP addresses)
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            
+            // If accessing from localhost, use localhost
+            // If accessing from IP (mobile on same network), use that IP
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                return `${protocol}//${hostname}:5000`;
+            } else {
+                // Mobile device accessing via IP - use that IP
+                return `${protocol}//${hostname}:5000`;
+            }
+        };
+
+        const API_BASE_URL = getApiUrl();
+        console.log('Using API URL:', API_BASE_URL);
+
         // Request notification permission
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
@@ -1280,11 +1299,23 @@
             animateLoadingSteps();
 
             try {
-                const response = await fetch('http://localhost:5000/api/generate-plan', {
+                // Create AbortController with 90-second timeout for mobile compatibility
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 90000); // 90 seconds
+
+                const response = await fetch(`${API_BASE_URL}/api/generate-plan`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(formData),
+                    signal: controller.signal,
+                    keepalive: true  // Keep connection alive on mobile
                 });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
 
                 const data = await response.json();
 
@@ -1296,8 +1327,16 @@
                 showNotification('FitMentor AI', 'Your personalized plan is ready!');
                 displayResults(data);
             } catch (error) {
-                showNotification('FitMentor AI', 'Error: ' + error.message);
-                alert('Error generating plan: ' + error.message);
+                let errorMessage = error.message;
+                
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Request timed out. Please check your internet connection and try again.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Cannot connect to server. Make sure the server is running.';
+                }
+                
+                showNotification('FitMentor AI', 'Error: ' + errorMessage);
+                alert('Error generating plan: ' + errorMessage);
                 resetForm();
             }
         });
